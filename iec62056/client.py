@@ -141,7 +141,7 @@ class Client(object):
 
             osis_data = data_pattern.match(line)
             if not osis_data:
-                _logger.warning('No osis data')
+                _logger.debug('No osis data')
                 continue
             value_data = value_pattern.search(line)
             if not value_data:
@@ -158,7 +158,7 @@ class Client(object):
                 measure=osis_data.group(1),
                 mode=osis_data.group(2),
                 rate=osis_data.group(3),
-                billing_period=osis_data.group(3)
+                #billing_period=osis_data.group(6)
             )
             for value_group in value_groups:
                 v = value_group.split('*')
