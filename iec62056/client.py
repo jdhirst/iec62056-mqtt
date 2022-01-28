@@ -111,19 +111,20 @@ class Client(object):
         line2 = self.ser.readline().decode('ascii')
         _logger.debug(line1)
         _logger.debug(line2)
-        id_data = re.match('/(\w{3})(\w)\\\\(\w)?(.+)', line2)
-        if not id_data:
-            raise IOError
-        maker_id = id_data.group(1)
-        baudrate_id = id_data.group(2)
-        mode_id = id_data.group(3)
-        meter_id = id_data.group(4)
-        _logger.info(f'maker: {maker_id}, baudrate: {baudrate_id}, mode: {mode_id}, meter: {meter_id}')
+#        id_data = re.match('/(\w{3})(\w)\\\\(\w)?(.+)', line2)
+#        if not id_data:
+#            raise IOError
+#        maker_id = id_data.group(1)
+#        baudrate_id = id_data.group(2)
+#        mode_id = id_data.group(3)
+#        meter_id = id_data.group(4)
+#        _logger.info(f'maker: {maker_id}, baudrate: {baudrate_id}, mode: {mode_id}, meter: {meter_id}')
 
     def _read_data_msg(self):
         """Read a data message."""
         self.data_sets.clear()
-        data_pattern = re.compile('(\w+)-(\w+):(\w+).(\w+).(\w+)*(\w+)?')
+        #data_pattern = re.compile('(\w+)-(\w+):(\w+).(\w+).(\w+)*(\w+)?')
+        data_pattern = re.compile('(\w+).(\w+).(\w+)*(\w+)?')
         value_pattern = re.compile('\((.*?)\)')
         end = b'\x03'
         _logger.debug(f'end char: ' + binascii.hexlify(end).decode('ascii'))
@@ -152,12 +153,12 @@ class Client(object):
                 continue
 
             data_set = DataSet(
-                medium=osis_data.group(1),
-                channel=osis_data.group(2),
-                measure=osis_data.group(3),
-                mode=osis_data.group(4),
-                rate=osis_data.group(5),
-                billing_period=osis_data.group(6)
+                #medium=osis_data.group(1),
+                #channel=osis_data.group(2),
+                measure=osis_data.group(1),
+                mode=osis_data.group(2),
+                rate=osis_data.group(3),
+                billing_period=osis_data.group(3)
             )
             for value_group in value_groups:
                 v = value_group.split('*')
