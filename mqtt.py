@@ -46,7 +46,7 @@ def update():
 
     messages = []
     for d in meter.data_sets:
-        topic = "smartmeter/" + snakify(d.measure_display) + "/" + snakify(d.mode_display)
+        topic = "smartmeter/" + snakify(d.measure_display)
         print("Topic: " + topic)
         for v in d.values:
             publish(mclient, topic, v.value)
