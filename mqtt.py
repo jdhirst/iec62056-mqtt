@@ -1,4 +1,5 @@
 import json,re,multiprocessing,time
+from datetime import datetime
 from iec62056.client import Client
 from iec62056.dataset import DataSet
 from paho.mqtt import client as mqtt_client
@@ -43,15 +44,19 @@ def publish(client, topic, msg):
 def update():
     meter.read()
     mclient = connect_mqtt()
+    measures = ["1","21","41","61"]
 
-    messages = []
     for d in meter.data_sets:
-        topic = "smartmeter/" + snakify(d.measure_display)
-        print("Topic: " + topic)
-        for v in d.values:
-            publish(mclient, topic, v.value)
+        print("Rate: " + d.rate + " Measure: " + d.measure)
+        if ((d.rate == "0") and (d.measure in measures)):
+            topic = "smartmeter/" + snakify(d.measure_display)
+            for v in d.values:
+                publish(mclient, topic, v.value)
 
 def main():
+    now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    print("Polling meter data at " + now)
+
     p = multiprocessing.Process(target=update)
     p.start()
 
